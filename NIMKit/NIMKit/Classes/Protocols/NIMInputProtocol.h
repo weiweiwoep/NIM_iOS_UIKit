@@ -34,6 +34,8 @@
 
 - (void)onTapEmoticonBtn:(id)sender;
 
+- (void)onTapWyGiftBtn:(id)sender;
+
 - (void)onTapVoiceBtn:(id)sender;
 
 @end

@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "NIMInputMoreContainerView.h"
 #import "NIMInputEmoticonContainerView.h"
+#import "NIMInputWyGiftContainerView.h"
 #import "NIMInputAudioRecordIndicatorView.h"
 #import "UIView+NIM.h"
 #import "NIMInputEmoticonDefine.h"
@@ -23,7 +24,7 @@
 #import "NIMKitKeyboardInfo.h"
 #import "NSString+NIMKit.h"
 
-@interface NIMInputView()<NIMInputToolBarDelegate,NIMInputEmoticonProtocol,NIMContactSelectDelegate>
+@interface NIMInputView()<NIMInputToolBarDelegate,NIMInputEmoticonProtocol,NIMInputWyGiftProtocol,NIMContactSelectDelegate>
 {
     UIView  *_emoticonView;
 }
@@ -42,6 +43,7 @@
 @implementation NIMInputView
 
 @synthesize emoticonContainer = _emoticonContainer;
+@synthesize wyGiftContainer = _wyGiftContainer;
 @synthesize moreContainer = _moreContainer;
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -74,6 +76,9 @@
         case NIMInputStatusEmoticon:
             containerHeight = _emoticonContainer.nim_height;
             break;
+        case NIMInputStatusWyGift:
+            containerHeight = _wyGiftContainer.nim_height;
+                break;
         case NIMInputStatusMore:
             containerHeight = _moreContainer.nim_height;
             break;
@@ -178,6 +183,7 @@
     
     _toolBar.delegate = self;
     [_toolBar.emoticonBtn addTarget:self action:@selector(onTouchEmoticonBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_toolBar.wyGiftBtn addTarget:self action:@selector(onTouchWyGiftBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.moreMediaBtn addTarget:self action:@selector(onTouchMoreBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.voiceButton addTarget:self action:@selector(onTouchVoiceBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_toolBar.recordButton addTarget:self action:@selector(onTouchRecordBtnDown:) forControlEvents:UIControlEventTouchDown];
@@ -242,6 +248,33 @@
     {
         [self addSubview:_emoticonContainer];
     }
+}
+
+- (void)checkWyGiftContainer
+{
+    if (!_wyGiftContainer) {
+        NIMInputWyGiftContainerView *wyGiftContainer = [[NIMInputWyGiftContainerView alloc] initWithFrame:CGRectZero];
+        
+        wyGiftContainer.nim_size = [wyGiftContainer sizeThatFits:CGSizeMake(self.nim_width, CGFLOAT_MAX)];
+        wyGiftContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        wyGiftContainer.delegate = self;
+        wyGiftContainer.hidden = YES;
+        wyGiftContainer.config = _inputConfig;
+        
+        _wyGiftContainer = wyGiftContainer;
+    }
+    
+    //可能是外部主动设置进来的，统一放在这里添加 subview
+    if (!_wyGiftContainer.superview)
+    {
+        [self addSubview:_wyGiftContainer];
+    }
+}
+
+- (void)setWyGiftContainer:(UIView *)wyGiftContainer
+{
+    _wyGiftContainer = wyGiftContainer;
+    [self sizeToFit];
 }
 
 - (void)setEmoticonContainer:(UIView *)emoticonContainer
@@ -316,6 +349,7 @@
     //这里不做.语法 get 操作，会提前初始化组件导致卡顿
     _moreContainer.nim_top     = self.toolBar.nim_bottom;
     _emoticonContainer.nim_top = self.toolBar.nim_bottom;
+    _wyGiftContainer.nim_top = self.toolBar.nim_bottom;
 }
 
 
@@ -382,7 +416,6 @@
     self.recordPhase = AudioRecordPhaseCancelling;
 }
 
-
 - (void)onTouchEmoticonBtn:(id)sender
 {
     if (self.status != NIMInputStatusEmoticon) {
@@ -393,9 +426,35 @@
         [self bringSubviewToFront:self.emoticonContainer];
         [self.emoticonContainer setHidden:NO];
         [self.moreContainer setHidden:YES];
+        [self.wyGiftContainer setHidden:YES];
         [self refreshStatus:NIMInputStatusEmoticon];
         [self sizeToFit];
         
+        if (self.toolBar.showsKeyboard)
+        {
+            self.toolBar.showsKeyboard = NO;
+        }
+    }
+    else
+    {
+        [self refreshStatus:NIMInputStatusText];
+        self.toolBar.showsKeyboard = YES;
+    }
+}
+
+- (void)onTouchWyGiftBtn:(id)sender
+{
+    if (self.status != NIMInputStatusWyGift) {
+        if ([self.actionDelegate respondsToSelector:@selector(onTapWyGiftBtn:)]) {
+            [self.actionDelegate onTapWyGiftBtn:sender];
+        }
+        [self checkWyGiftContainer];
+        [self bringSubviewToFront:self.wyGiftContainer];
+        [self.wyGiftContainer setHidden:NO];
+        [self.emoticonContainer setHidden:YES];
+        [self.moreContainer setHidden:YES];
+        [self refreshStatus:NIMInputStatusWyGift];
+        [self sizeToFit];
         
         if (self.toolBar.showsKeyboard)
         {
@@ -419,6 +478,7 @@
         [self bringSubviewToFront:self.moreContainer];
         [self.moreContainer setHidden:NO];
         [self.emoticonContainer setHidden:YES];
+        [self.wyGiftContainer setHidden:YES];
         [self refreshStatus:NIMInputStatusMore];
         [self sizeToFit];
 
@@ -595,6 +655,24 @@
         }
     }
 }
+
+#pragma mark - InputWyGiftProtocol
+
+- (void)selectedWyGift:(NSString *)wyGiftID catalog:(NSString *)wyGiftCatalogID description:(NSString *)description{
+    if (!wyGiftID) { //删除键
+        [self onTextDelete];
+    }else{
+        if ([wyGiftID isEqualToString:NIMKit_EmojiCatalog]) {
+            [self.toolBar insertText:description];
+        }else{
+            //发送贴图消息
+            if ([self.actionDelegate respondsToSelector:@selector(onSelectChartlet:catalog:)]) {
+                [self.actionDelegate onSelectChartlet:wyGiftID catalog:wyGiftCatalogID];
+            }
+        }
+    }
+}
+
 
 - (void)didPressSend:(id)sender{
     if ([self.actionDelegate respondsToSelector:@selector(onSendText:atUsers:)] && [self.toolBar.contentText length] > 0) {

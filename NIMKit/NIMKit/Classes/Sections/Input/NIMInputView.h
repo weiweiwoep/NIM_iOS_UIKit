@@ -14,6 +14,7 @@
 
 @class NIMInputMoreContainerView;
 @class NIMInputEmoticonContainerView;
+@class NIMInputWyGiftContainerView;
 
 
 
@@ -45,6 +46,7 @@ typedef NS_ENUM(NSInteger, NIMAudioRecordPhase) {
 @property (strong, nonatomic)  NIMInputToolBar *toolBar;
 @property (strong, nonatomic)  UIView *moreContainer;
 @property (strong, nonatomic)  UIView *emoticonContainer;
+@property (strong, nonatomic)  UIView *wyGiftContainer;
 
 @property (nonatomic, assign) NIMInputStatus status;
 @property (nonatomic, strong) NIMInputAtCache *atCache;

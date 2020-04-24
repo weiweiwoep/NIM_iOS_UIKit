@@ -10,6 +10,7 @@
 #import <NIMSDK/NIMSDK.h>
 #import "NTESCellLayoutConfig.h"
 #import "NTESAttachmentDecoder.h"
+#import "WyGiftManager.h"
 #define NIMSDKAppKey @"8fc95f505b6cbaedf613677c8e08fc0b"
 
 @interface NTESAppDelegate ()
@@ -31,6 +32,9 @@
     
     //注入 NIMKit 布局管理器
     [[NIMKit sharedKit] registerLayoutConfig:[NTESCellLayoutConfig new]];
+    
+    //加载礼物
+    [WyGiftManager giftList];
     
     return YES;
 }

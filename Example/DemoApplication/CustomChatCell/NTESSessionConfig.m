@@ -27,5 +27,14 @@
     return YES;
 }
 
+- (NSArray<NSNumber *> *)inputBarItemTypes{
+    //示例包含语音、输入框、表情以及更多按钮
+    return @[
+               @(NIMInputBarItemTypeTextAndRecord),
+               @(NIMInputBarItemWYGift),
+               @(NIMInputBarItemTypeEmoticon),
+               @(NIMInputBarItemTypeMore)
+            ];
+}
 
 @end

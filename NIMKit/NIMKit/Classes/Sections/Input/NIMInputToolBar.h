@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger,NIMInputStatus)
     NIMInputStatusText,
     NIMInputStatusAudio,
     NIMInputStatusEmoticon,
+    NIMInputStatusWyGift,
     NIMInputStatusMore
 };
 
@@ -41,6 +42,8 @@ typedef NS_ENUM(NSInteger,NIMInputStatus)
 @property (nonatomic,strong) UIButton    *voiceButton;
 
 @property (nonatomic,strong) UIButton    *emoticonBtn;
+
+@property (nonatomic, strong) UIButton *wyGiftBtn;
 
 @property (nonatomic,strong) UIButton    *moreMediaBtn;
 

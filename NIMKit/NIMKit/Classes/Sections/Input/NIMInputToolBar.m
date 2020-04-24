@@ -36,11 +36,16 @@
         [_voiceButton setImage:[UIImage nim_imageInKit:@"icon_toolview_voice_pressed"] forState:UIControlStateHighlighted];
         [_voiceButton sizeToFit];
         
-        
         _emoticonBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_emoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_normal"] forState:UIControlStateNormal];
         [_emoticonBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_emotion_pressed"] forState:UIControlStateHighlighted];
         [_emoticonBtn sizeToFit];
+        
+        _wyGiftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_wyGiftBtn setImage:[UIImage imageNamed:@"icon_toolview_wygift_normal"] forState:UIControlStateNormal];
+        [_wyGiftBtn setImage:[UIImage imageNamed:@"icon_toolview_wygift_pressed"] forState:UIControlStateHighlighted];
+        [_wyGiftBtn sizeToFit];
+        [_wyGiftBtn setFrame:CGRectMake(0, 0, 50, 50)];
         
         _moreMediaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_moreMediaBtn setImage:[UIImage nim_imageInKit:@"icon_toolview_add_normal"] forState:UIControlStateNormal];
@@ -82,6 +87,7 @@
         self.types = @[
                          @(NIMInputBarItemTypeVoice),
                          @(NIMInputBarItemTypeTextAndRecord),
+                         @(NIMInputBarItemWYGift),
                          @(NIMInputBarItemTypeEmoticon),
                          @(NIMInputBarItemTypeMore),
                        ];
@@ -316,6 +322,7 @@
                   @(NIMInputBarItemTypeVoice) : self.voiceButton,
                   @(NIMInputBarItemTypeTextAndRecord)  : self.inputTextBkgImage,
                   @(NIMInputBarItemTypeEmoticon) : self.emoticonBtn,
+                  @(NIMInputBarItemWYGift):self.wyGiftBtn,
                   @(NIMInputBarItemTypeMore)     : self.moreMediaBtn
                 };
     }
