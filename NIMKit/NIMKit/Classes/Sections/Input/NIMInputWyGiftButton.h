@@ -18,7 +18,7 @@
 
 
 
-@interface NIMInputWyGiftButton : UIButton
+@interface NIMInputWyGiftButton : UIView
 
 @property (nonatomic, strong) NIMInputWyGift *wyGiftData;
 

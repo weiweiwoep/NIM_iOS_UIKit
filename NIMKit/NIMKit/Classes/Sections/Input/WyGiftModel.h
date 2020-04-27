@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <JSONModel/JSONModel.h>
-#import "WyResponse.h"
 NS_ASSUME_NONNULL_BEGIN
 
 //@protocol WyGiftModel;

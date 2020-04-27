@@ -12,6 +12,8 @@
 #import "NIMKit.h"
 #import "UIImage+NIMKit.h"
 #import "NSBundle+NIMKit.h"
+#import <TMCache/TMCache.h>
+#import "WyGiftModel.h"
 
 @implementation NIMInputWyGift
 
@@ -162,21 +164,22 @@
 - (void)parsePlist
 {
     NSMutableArray *catalogs = [NSMutableArray array];
-    //todo
-//    NSString *filepath = [NSBundle nim_WyGiftPlistFile];
-    NSString *filepath = @"";
-    if (filepath) {
-        NSArray *array = [NSArray arrayWithContentsOfFile:filepath];
-        for (NSDictionary *dict in array)
-        {
-            NSDictionary *info = dict[@"info"];
-            NSArray *wyGifts = dict[@"data"];
-            
-            NIMInputWyGiftCatalog *catalog = [self catalogByInfo:info
-                                                     wyGifts:wyGifts];
-            [catalogs addObject:catalog];
-        }
+    NSArray *array = [TMCache.sharedCache objectForKey:Key_WyNim_InputGiftData];
+    JSONModelError *error = nil;
+    NSArray *list = [WyGiftModel arrayOfModelsFromDictionaries:array error:&error];
+    if (error || list == nil || list.count < 1) {
+        NSLog(@"聊天礼物菜单元素获取失败:%@",error.description);
+        return;
     }
+    NSDictionary *info = @{
+        @"id": @"wyGift",
+        @"normal":@"emoj_s_normal.png",
+        @"pressed": @"emoj_s_pressed.png",
+        @"title":@"wyGift"
+    };
+    NIMInputWyGiftCatalog *catalog = [self catalogByInfo:info
+                                                     wyGifts:list];
+    [catalogs addObject:catalog];
     _catalogs = catalogs;
 }
 
@@ -192,10 +195,14 @@
     NSMutableDictionary *id2WyGifts = [NSMutableDictionary dictionary];
     NSMutableArray *wyGifts = [NSMutableArray array];
     
-    for (NSDictionary *wyGiftDict in wyGiftsArray) {
+    for (WyGiftModel *model in wyGiftsArray) {
         NIMInputWyGift *wyGift  = [[NIMInputWyGift alloc] init];
-        wyGift.wyGiftID     = wyGiftDict[@"id"];
-        wyGift.tag            = wyGiftDict[@"tag"];
+        wyGift.wyGiftID     = [NSString stringWithFormat:@"%ld",(long)model.id];
+        wyGift.tag          = [NSString stringWithFormat:@"%ld",(long)model.id];
+        wyGift.imgUrl       = model.img_url;
+        wyGift.gifUrl       = model.gif_url;
+        wyGift.money        = model.money;
+        wyGift.wyGiftName   = model.name;
 //        wyGift.unicode        = wyGiftDict[@"unicode"];
 //        wyGift.filename       = wyGiftDict[@"file"];
         

@@ -13,6 +13,7 @@
 #import "NIMInputWyGiftContainerView.h"
 #import "NIMInputAudioRecordIndicatorView.h"
 #import "UIView+NIM.h"
+#import "NIMGlobalMacro.h"
 #import "NIMInputEmoticonDefine.h"
 #import "NIMInputEmoticonManager.h"
 #import "NIMInputToolBar.h"
@@ -125,12 +126,13 @@
     self.status = status;
     [self.toolBar update:status];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        //更改背景
+        self.backgroundColor = status != NIMInputStatusWyGift ? UIColor.clearColor : NIMKit_UIColorFromRGBA(0x0, .9f);
         self.moreContainer.hidden = status != NIMInputStatusMore;
         self.emoticonContainer.hidden = status != NIMInputStatusEmoticon;
+        self.wyGiftContainer.hidden = status != NIMInputStatusWyGift;
     });
 }
-
-
 
 - (NIMInputAudioRecordIndicatorView *)audioRecordIndicator {
     if(!_audioRecordIndicator) {
@@ -455,7 +457,6 @@
         [self.moreContainer setHidden:YES];
         [self refreshStatus:NIMInputStatusWyGift];
         [self sizeToFit];
-        
         if (self.toolBar.showsKeyboard)
         {
             self.toolBar.showsKeyboard = NO;

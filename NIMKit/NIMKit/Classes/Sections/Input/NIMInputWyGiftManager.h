@@ -63,4 +63,8 @@
 - (NIMInputWyGift *)wyGiftByID:(NSString *)wyGiftID;
 - (NIMInputWyGift *)wyGiftByCatalogID:(NSString *)catalogID
                            wyGiftID:(NSString *)wyGiftID;
+
+- (NIMInputWyGiftCatalog *)catalogByInfo:(NSDictionary *)info
+                                 wyGifts:(NSArray *)wyGiftsArray;
+
 @end

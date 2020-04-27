@@ -22,10 +22,10 @@
 #define NIMKit_WyGiftTopMargin       14
 #define NIMKit_DeleteIconWidth      43.0
 #define NIMKit_DeleteIconHeight     43.0
-#define NIMKit_WyGiftCellHeight       46.0
-#define NIMKit_WyGiftImageHeight      43.0
-#define NIMKit_WyGiftImageWidth       43.0
-#define NIMKit_WyGiftRows             3
+#define NIMKit_WyGiftCellHeight       72.0
+#define NIMKit_WyGiftImageHeight      70.0
+#define NIMKit_WyGiftImageWidth       70.0
+#define NIMKit_WyGiftRows             2
 
 //贴图
 #define NIMKit_WyGiftPicCellHeight        76.0
@@ -33,5 +33,6 @@
 #define NIMKit_WyGiftPicImageWidth        70.f
 #define NIMKit_WyGiftPicRows              2
 
+#define Key_WyNim_InputGiftData @"key_wynim_input_gift_data"
 
 #endif
