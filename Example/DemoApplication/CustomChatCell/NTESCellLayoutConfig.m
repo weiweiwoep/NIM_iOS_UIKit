@@ -12,7 +12,7 @@
 
 - (CGSize)contentSize:(NIMMessageModel *)model cellWidth:(CGFloat)width{
     if ([self canLayout:model]) {
-        return CGSizeMake(200, 50);
+        return CGSizeMake(100, 100);
     }
     return [super contentSize:model cellWidth:width];
 }
@@ -20,7 +20,7 @@
 - (NSString *)cellContent:(NIMMessageModel *)model{
     if ([self canLayout:model]) {
         //填入自定义的气泡contentView
-        return @"NTESContentView";
+        return @"NIMSessionWyGiftContentView";
     }
     return [super cellContent:model];
 }
@@ -28,7 +28,7 @@
 - (UIEdgeInsets)cellInsets:(NIMMessageModel *)model{
     if ([self canLayout:model]) {
         //填入气泡距cell的边距,选填
-        return UIEdgeInsetsMake(5, 5, 5, 5);
+        return UIEdgeInsetsMake(5, 55, 5, 5);
     }
     return [super cellInsets:model];
     
@@ -38,10 +38,9 @@
 - (UIEdgeInsets)contentViewInsets:(NIMMessageModel *)model{
     if ([self canLayout:model]) {
         //填入内容距气泡的边距,选填
-        return UIEdgeInsetsMake(5, 5, 5, 5);
+        return UIEdgeInsetsMake(0, 0, 0, 0);
     }
     return [super contentViewInsets:model];
-    
 }
 
 

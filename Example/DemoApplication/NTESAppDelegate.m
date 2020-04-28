@@ -10,6 +10,8 @@
 #import <NIMSDK/NIMSDK.h>
 #import "NTESCellLayoutConfig.h"
 #import "NTESAttachmentDecoder.h"
+#import <NIMKit/NIMKit.h>
+//#import "NIMWyGiftAttachmentDecoder.h"
 #import "WyGiftManager.h"
 #define NIMSDKAppKey @"8fc95f505b6cbaedf613677c8e08fc0b"
 
@@ -25,7 +27,7 @@
     [[NIMSDK sharedSDK] registerWithAppID:NIMSDKAppKey cerName:nil];
     
     //需要自定义消息时使用
-    [NIMCustomObject registerCustomDecoder:[[NTESAttachmentDecoder alloc]init]];
+//    [NIMCustomObject registerCustomDecoder:[[NTESAttachmentDecoder alloc]init]];
     
     //开启控制台调试
     [[NIMSDK sharedSDK] enableConsoleLog];

@@ -11,6 +11,4 @@
 
 @interface NTESCellLayoutConfig : NIMCellLayoutConfig<NIMCellLayoutConfig>
 
-
-
 @end
