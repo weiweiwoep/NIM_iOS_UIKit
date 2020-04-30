@@ -356,6 +356,12 @@
 
 - (void)insertText:(NSString *)text
 {
+    NSRange startRange = [text rangeOfString:@"/{wy"];
+       NSRange endRange = [text rangeOfString:@"wy}/"];
+    if (startRange.location != NSNotFound && endRange.location != NSNotFound) {
+        self.inputTextView.text = @"";
+    }
+    
     NSRange range = self.inputTextView.selectedRange;
     NSString *replaceText = [self.inputTextView.text stringByReplacingCharactersInRange:range withString:text];
     range = NSMakeRange(range.location + text.length, 0);

@@ -9,7 +9,7 @@
 #ifndef NIMKit_NIMInputWyGiftDefine_h
 #define NIMKit_NIMInputWyGiftDefine_h
 
-#define NIMKit_WyGiftCatalog                                @"default"
+#define NIMKit_WyGiftCatalog                                @"wyGift"
 #define NIMKit_WyGiftPath                                   @"Emoji"
 #define NIMKit_ChartletChartletCatalogPath                 @"Chartlet"
 #define NIMKit_ChartletChartletCatalogContentPath          @"content"

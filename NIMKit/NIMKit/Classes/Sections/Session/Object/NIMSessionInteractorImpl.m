@@ -115,7 +115,7 @@ dispatch_queue_t NTESMessageDataPrepareQueue()
         if (message.isDeleted)
         {
             continue;
-        }        
+        }
         NIMMessageModel *model = [[NIMMessageModel alloc] initWithMessage:message];
         model.shouldShowSelect = (_sessionState == NIMKitSessionStateSelect);
         if ([_sessionConfig respondsToSelector:@selector(disableSelectedForMessage:)]) {
@@ -331,8 +331,10 @@ dispatch_queue_t NTESMessageDataPrepareQueue()
 
 #pragma mark - 消息收发接口
 - (void)sendMessage:(NIMMessage *)message
-{    
-    [[[NIMSDK sharedSDK] chatManager] sendMessage:message toSession:_session error:nil];
+{
+    NSError *error = nil;
+    BOOL isSuccess = [[[NIMSDK sharedSDK] chatManager] sendMessage:message toSession:_session error:&error];
+    NSLog(isSuccess?@"消息发送成功":@"消息发送失败");
 }
 
 - (void)sendMessage:(NIMMessage *)message completion:(void(^)(NSError *))completion
@@ -479,7 +481,7 @@ dispatch_queue_t NTESMessageDataPrepareQueue()
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.layout reloadTable];
     });
-
+    
     [[NIMSDK sharedSDK].mediaManager addDelegate:self];
 }
 
@@ -636,7 +638,7 @@ dispatch_queue_t NTESMessageDataPrepareQueue()
             NSArray *delete = [self.dataSource deleteModels:deleteRange];
             [self.layout remove:delete];
         }
-
+        
         [self processChatroomMessageModels];
     }
     else

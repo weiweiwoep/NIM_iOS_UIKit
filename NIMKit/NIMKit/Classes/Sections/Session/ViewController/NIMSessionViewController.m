@@ -20,6 +20,10 @@
 #import "NIMKitInfoFetchOption.h"
 #import "NIMKitTitleView.h"
 #import "NIMKitKeyboardInfo.h"
+#import <TMCache/TMCache.h>
+#import "NIMInputWyGiftDefine.h"
+#import "WyGiftModel.h"
+#import "NIMWyGiftAttachment.h"
 
 @interface NIMSessionViewController ()<NIMMediaManagerDelegate,NIMInputDelegate>
 
@@ -270,7 +274,7 @@
             NIMMessageReceipt *receipt = [[NIMMessageReceipt alloc] initWithMessage:message];
             [self.interactor checkReceipts:@[receipt]];
         }
-    }    
+    }
 }
 
 //发送进度
@@ -429,6 +433,25 @@
 
 - (void)onTextChanged:(id)sender{}
 
+- (WyGiftModel *)findWyGiftWithGifts:(NSArray *)gifts msgText:(NSString *)msgText{
+    WyGiftModel *gift = nil;
+    msgText = [msgText stringByReplacingOccurrencesOfString:@"/{wy" withString:@""];
+    msgText = [msgText stringByReplacingOccurrencesOfString:@"wy}/" withString:@""];
+    NSArray *tmpArray = [msgText componentsSeparatedByString:@"^"];
+    if (tmpArray && tmpArray.count > 0) {
+        NSString *giftIdStr = (NSString *)tmpArray[0];
+        if (giftIdStr && giftIdStr.length > 0) {
+            for (WyGiftModel *obj in gifts) {
+                if ([[NSString stringWithFormat:@"%ld",obj.id] isEqualToString:giftIdStr]) {
+                    gift = obj;
+                    break;
+                }
+            }
+        }
+    }
+    return gift;
+}
+
 - (void)onSendText:(NSString *)text atUsers:(NSArray *)atUsers
 {
     NSMutableArray *users = [NSMutableArray arrayWithArray:atUsers];
@@ -436,8 +459,33 @@
     {
         [users addObject:self.session.sessionId];
     }
-
-    NIMMessage *message = [NIMMessageMaker msgWithText:text];
+    NIMMessage *message = nil;
+    
+    NSRange startRange = [text rangeOfString:@"/{wy"];
+    NSRange endRange = [text rangeOfString:@"wy}/"];
+    if (startRange.location != NSNotFound && endRange.location != NSNotFound) {
+        NSArray *array = [TMCache.sharedCache objectForKey:Key_WyNim_InputGiftData];
+        JSONModelError *error = nil;
+        NSArray *list = [WyGiftModel arrayOfModelsFromDictionaries:array error:&error];
+        if (error || list == nil || list.count < 1) {
+            NSLog(@"聊天礼物菜单元素获取失败:%@",error.description);
+            return;
+        }
+        WyGiftModel *gift = [self findWyGiftWithGifts:list msgText:text];
+        //构造自定义微缘礼物消息
+        NIMWyGiftAttachment *attachment = [[NIMWyGiftAttachment alloc] init];
+        attachment.wyGift = gift;
+        
+        //构造自定义MessageObject
+        NIMCustomObject *object = [[NIMCustomObject alloc] init];
+        object.attachment = attachment;
+        
+        //构造自定义消息
+        message = [[NIMMessage alloc] init];
+        message.messageObject = object;
+    }else{
+        message = [NIMMessageMaker msgWithText:text];
+    }
     if (atUsers.count)
     {
         NIMMessageApnsMemberOption *apnsOption = [[NIMMessageApnsMemberOption alloc] init];
@@ -702,12 +750,12 @@
         __weak typeof(self) wself = self;
         [coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context)
          {
-             [[NIMSDK sharedSDK].mediaManager cancelRecord];
-             [wself.interactor cleanCache];
-             [wself.sessionInputView reset];
-             [wself.tableView reloadData];
-             [wself.tableView scrollToRowAtIndexPath:wself.lastVisibleIndexPathBeforeRotation atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-         } completion:nil];
+            [[NIMSDK sharedSDK].mediaManager cancelRecord];
+            [wself.interactor cleanCache];
+            [wself.sessionInputView reset];
+            [wself.tableView reloadData];
+            [wself.tableView scrollToRowAtIndexPath:wself.lastVisibleIndexPathBeforeRotation atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        } completion:nil];
     }
 }
 
@@ -770,7 +818,7 @@
         self.titleLabel    = titleView.titleLabel;
         self.subTitleLabel = titleView.subtitleLabel;
     }
-
+    
     [titleView sizeToFit];
 }
 

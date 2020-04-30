@@ -172,7 +172,7 @@
         return;
     }
     NSDictionary *info = @{
-        @"id": @"wyGift",
+        @"id": NIMKit_WyGiftCatalog,
         @"normal":@"emoj_s_normal.png",
         @"pressed": @"emoj_s_pressed.png",
         @"title":@"wyGift"
@@ -198,7 +198,7 @@
     for (WyGiftModel *model in wyGiftsArray) {
         NIMInputWyGift *wyGift  = [[NIMInputWyGift alloc] init];
         wyGift.wyGiftID     = [NSString stringWithFormat:@"%ld",(long)model.id];
-        wyGift.tag          = [NSString stringWithFormat:@"%ld",(long)model.id];
+        wyGift.tag          = model.name;
         wyGift.imgUrl       = model.img_url;
         wyGift.gifUrl       = model.gif_url;
         wyGift.money        = model.money;
@@ -223,7 +223,7 @@
 
 - (void)preloadWyGiftResource {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        for (NIMInputWyGiftCatalog *catalog in _catalogs) {
+        for (NIMInputWyGiftCatalog *catalog in self->_catalogs) {
             [catalog.wyGifts enumerateObjectsUsingBlock:^(NIMInputWyGift  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (obj.imgUrl) {
 //                   __unused UIImage *image = [UIImage nim_emoticonInKit:obj.filename];

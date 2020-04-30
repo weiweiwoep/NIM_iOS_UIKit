@@ -10,14 +10,6 @@
 #import <JSONModel/JSONModel.h>
 NS_ASSUME_NONNULL_BEGIN
 
-//@protocol WyGiftModel;
-//
-//@interface WyGiftListModel : WyResponse
-//
-//@property(nonatomic,strong) NSArray<WyGiftModel> *data;
-//
-//@end
-
 @interface WyGiftModel : JSONModel
 
 @property (nonatomic,assign) NSInteger id;

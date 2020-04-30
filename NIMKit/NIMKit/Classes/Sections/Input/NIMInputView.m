@@ -11,6 +11,7 @@
 #import "NIMInputMoreContainerView.h"
 #import "NIMInputEmoticonContainerView.h"
 #import "NIMInputWyGiftContainerView.h"
+#import "NIMInputWyGiftDefine.h"
 #import "NIMInputAudioRecordIndicatorView.h"
 #import "UIView+NIM.h"
 #import "NIMGlobalMacro.h"
@@ -127,7 +128,7 @@
     [self.toolBar update:status];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         //更改背景
-        self.backgroundColor = status != NIMInputStatusWyGift ? UIColor.clearColor : NIMKit_UIColorFromRGBA(0x0, .9f);
+        self.backgroundColor = status != NIMInputStatusWyGift ? UIColor.whiteColor : NIMKit_UIColorFromRGBA(0x0, .9f);
         self.moreContainer.hidden = status != NIMInputStatusMore;
         self.emoticonContainer.hidden = status != NIMInputStatusEmoticon;
         self.wyGiftContainer.hidden = status != NIMInputStatusWyGift;
@@ -660,11 +661,12 @@
 #pragma mark - InputWyGiftProtocol
 
 - (void)selectedWyGift:(NSString *)wyGiftID catalog:(NSString *)wyGiftCatalogID description:(NSString *)description{
-    if (!wyGiftID) { //删除键
+    if (!wyGiftCatalogID) { //删除键
         [self onTextDelete];
     }else{
-        if ([wyGiftID isEqualToString:NIMKit_EmojiCatalog]) {
-            [self.toolBar insertText:description];
+        if ([wyGiftCatalogID isEqualToString:NIMKit_WyGiftCatalog]) {
+            NSString *msgText = [NSString stringWithFormat:@"/{wy%@^%@wy}/",wyGiftID,description];
+            [self.toolBar insertText:msgText];
         }else{
             //发送贴图消息
             if ([self.actionDelegate respondsToSelector:@selector(onSelectChartlet:catalog:)]) {

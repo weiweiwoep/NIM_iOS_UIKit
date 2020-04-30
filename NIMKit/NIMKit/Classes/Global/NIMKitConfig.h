@@ -180,7 +180,6 @@ typedef NS_ENUM(NSInteger,NIMKitAvatarType) {
  */
 @property (nonatomic, strong) NIMKitSetting *netcallNotificationSetting;
 
-
 @end
 
 

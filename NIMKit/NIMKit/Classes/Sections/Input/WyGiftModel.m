@@ -8,10 +8,6 @@
 
 #import "WyGiftModel.h"
 
-//@implementation WyGiftListModel
-//
-//@end
-
 @implementation WyGiftModel
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName

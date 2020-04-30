@@ -111,6 +111,17 @@
     return [image nim_fixOrientation];
 }
 
++ (UIImage *)saImageWithSingleColor:(UIColor *)color
+{
+    UIGraphicsBeginImageContext(CGSizeMake(1.0f, 1.0f));
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
 
 #pragma mark - Private
 

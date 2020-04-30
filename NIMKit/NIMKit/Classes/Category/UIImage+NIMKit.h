@@ -27,4 +27,6 @@
 
 - (UIImage *)nim_cropedImageWithSize:(CGSize)size;
 
++ (UIImage *)saImageWithSingleColor:(UIColor *)color;
+
 @end
