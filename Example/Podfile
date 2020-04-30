@@ -12,4 +12,6 @@ target 'DemoApplication' do
   
   pod 'SVGAPlayer'
   
+  pod 'ReactiveObjC'
+  
 end
