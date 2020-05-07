@@ -34,7 +34,6 @@
     
 }
 
-
 - (UIEdgeInsets)contentViewInsets:(NIMMessageModel *)model{
     if ([self canLayout:model]) {
         //填入内容距气泡的边距,选填

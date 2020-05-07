@@ -165,12 +165,6 @@ NSInteger NIMWyCustomPageViewHeight    = 159;
     deleteIcon.userInteractionEnabled = YES;
     deleteIcon.exclusiveTouch = YES;
     deleteIcon.contentMode = UIViewContentModeCenter;
-    UIImage *imageNormal  = [UIImage nim_emoticonInKit:@"emoji_del_normal"];
-    UIImage *imagePressed = [UIImage nim_emoticonInKit:@"emoji_del_pressed"];
-    
-//    [deleteIcon setImage:imageNormal forState:UIControlStateNormal];
-//    [deleteIcon setImage:imagePressed forState:UIControlStateHighlighted];
-//    [deleteIcon addTarget:deleteIcon action:@selector(onIconSelected:) forControlEvents:UIControlEventTouchUpInside];
     
     CGFloat newX = (coloumnIndex +1) * wyGift.layout.cellWidth + startX;
     CGFloat newY = rowIndex * wyGift.layout.cellHeight + startY;
@@ -204,20 +198,14 @@ NSInteger NIMWyCustomPageViewHeight    = 159;
 
 - (NIMInputWyGiftCatalog*)loadDefaultCatalog
 {
-    NSArray *array = [TMCache.sharedCache objectForKey:Key_WyNim_InputGiftData];
-    JSONModelError *error = nil;
-    NSArray *list = [WyGiftModel arrayOfModelsFromDictionaries:array error:&error];
-    if (error || list == nil || list.count < 1) {
-        NSLog(@"聊天礼物菜单元素获取失败:%@",error.description);
-        return nil;
-    }
+    NSArray *wyGifts = NIMInputWyGiftManager.sharedManager.wyGifts;
     NSDictionary *info = @{
         @"id": @"wyGift",
         @"normal":@"emoj_s_normal.png",
         @"pressed": @"emoj_s_pressed.png",
         @"title":@"wyGift"
     };
-    NIMInputWyGiftCatalog *wyGiftCatalog = [NIMInputWyGiftManager.sharedManager catalogByInfo:info wyGifts:list];
+    NIMInputWyGiftCatalog *wyGiftCatalog = [NIMInputWyGiftManager.sharedManager catalogByInfo:info wyGifts:wyGifts];
 //    NIMInputWyGiftCatalog *wyGiftCatalog = [[NIMInputWyGiftManager sharedManager] wyGiftCatalog:NIMKit_WyGiftCatalog];
     if (wyGiftCatalog) {
         NIMInputWyGiftLayout *layout = [[NIMInputWyGiftLayout alloc] initWyGiftLayout:self.nim_width];

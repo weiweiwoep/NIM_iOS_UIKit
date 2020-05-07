@@ -26,10 +26,7 @@
     icon.contentMode            = UIViewContentModeScaleToFill;
     icon.delegate               = delegate;
     
-    NSURL *imgUrl = [NSURL URLWithString:data.imgUrl];
-    NSData *imgData = [NSData dataWithContentsOfURL:imgUrl];
-    UIImage *image =  [UIImage.alloc initWithData:imgData];
-    
+    UIImage *image =  [UIImage.alloc initWithData:data.imgData];
     UIImageView *imgView = [UIImageView.alloc initWithImage:image];
     [icon addSubview:imgView];
     imgView.frame = CGRectMake(18, 0, 34, 34);

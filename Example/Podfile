@@ -8,10 +8,12 @@ target 'DemoApplication' do
 
   pod 'TMCache'
   
-  pod 'JSONModel'
-  
   pod 'SVGAPlayer'
   
   pod 'ReactiveObjC'
+  
+  pod 'JSONModel'
+  
+
   
 end

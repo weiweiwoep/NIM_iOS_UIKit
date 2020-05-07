@@ -24,6 +24,7 @@
 #import "NIMInputWyGiftDefine.h"
 #import "WyGiftModel.h"
 #import "NIMWyGiftAttachment.h"
+#import "NIMInputWyGiftManager.h"
 
 @interface NIMSessionViewController ()<NIMMediaManagerDelegate,NIMInputDelegate>
 
@@ -464,14 +465,8 @@
     NSRange startRange = [text rangeOfString:@"/{wy"];
     NSRange endRange = [text rangeOfString:@"wy}/"];
     if (startRange.location != NSNotFound && endRange.location != NSNotFound) {
-        NSArray *array = [TMCache.sharedCache objectForKey:Key_WyNim_InputGiftData];
-        JSONModelError *error = nil;
-        NSArray *list = [WyGiftModel arrayOfModelsFromDictionaries:array error:&error];
-        if (error || list == nil || list.count < 1) {
-            NSLog(@"聊天礼物菜单元素获取失败:%@",error.description);
-            return;
-        }
-        WyGiftModel *gift = [self findWyGiftWithGifts:list msgText:text];
+        NSArray *wyGifts = NIMInputWyGiftManager.sharedManager.wyGifts;
+        WyGiftModel *gift = [self findWyGiftWithGifts:wyGifts msgText:text];
         //构造自定义微缘礼物消息
         NIMWyGiftAttachment *attachment = [[NIMWyGiftAttachment alloc] init];
         attachment.wyGift = gift;

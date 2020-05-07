@@ -39,9 +39,6 @@
         case NIMMessageTypeTip:
             text = message.text;
             break;
-        case WYNIMMessageTypeGift:                  //微缘礼物
-                text = @"[礼物]";
-                break;
         default:
             text = @"[未知消息]".nim_localized;
     }

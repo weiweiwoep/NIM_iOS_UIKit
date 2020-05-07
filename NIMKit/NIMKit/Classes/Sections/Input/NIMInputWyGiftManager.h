@@ -19,6 +19,8 @@
 @property (nonatomic,assign)    CGFloat     money;
 @property (nonatomic,strong)    NSString    *imgUrl;
 @property (nonatomic,strong)    NSString    *gifUrl;
+@property (nonatomic,strong)    NSData    *imgData;
+@property (nonatomic,strong)    NSData    *gifData;
 @property (nonatomic,assign)    BOOL        isGif;
 @property (nonatomic,strong)    NSString    *tag;
 //@property (nonatomic,strong)    NSString    *filename;
@@ -55,6 +57,8 @@
 @interface NIMInputWyGiftManager : NSObject
 
 + (instancetype)sharedManager;
+
+@property (nonatomic,strong)    NSArray *wyGifts;
 
 - (void)start;
 

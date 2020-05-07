@@ -62,10 +62,7 @@ static SVGAParser *parser;
     NIMWyGiftAttachment *wyGiftAttachment = (NIMWyGiftAttachment *)customObj.attachment;
     WyGiftModel *wyGift = wyGiftAttachment.wyGift;
     
-    NSURL *imgUrl = [NSURL URLWithString:wyGift.img_url];
-    NSData *imgData = [NSData dataWithContentsOfURL:imgUrl];
-    
-    YYImage *image = [YYImage imageWithData:imgData scale:[UIScreen mainScreen].scale];
+    YYImage *image = [YYImage imageWithData:wyGift.img_data scale:[UIScreen mainScreen].scale];
     _imageView.image = image;
     
     self.progressView.hidden     = self.model.message.isOutgoingMsg ? (self.model.message.deliveryState != NIMMessageDeliveryStateDelivering) : (self.model.message.attachmentDownloadState != NIMMessageAttachmentDownloadStateDownloading);
@@ -74,7 +71,6 @@ static SVGAParser *parser;
     }
     
     //播放礼物
-    
     long currentTimeStamp = [[NSDate date] timeIntervalSince1970];
     if (customObj.message.isReceivedMsg && wyGift.gif_url != nil && wyGift.gif_url.length > 0 && (currentTimeStamp-customObj.message.timestamp)<60*1) {
         
@@ -127,8 +123,7 @@ static SVGAParser *parser;
         self.gifPlayer.contentMode = UIViewContentModeCenter;
         self.gifPlayer.frame = CGRectMake(0, 0, NIMKit_UIScreenWidth, NIMKit_UIScreenHeight);
         
-        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:wyGift.gif_url]];
-        UIImage *image = [YYImage imageWithData:imageData];
+        UIImage *image = [YYImage imageWithData:wyGift.gif_data];
         [self.gifPlayer setImage:image];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -153,15 +148,24 @@ static SVGAParser *parser;
         
         parser = [[SVGAParser alloc] init];
         
-        [parser parseWithURL:[NSURL URLWithString:wyGift.gif_url] completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [parser parseWithData:wyGift.gif_data cacheKey:wyGift.gif_url completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
             if (videoItem != nil) {
                 self.aPlayer.videoItem = videoItem;
                 [self.aPlayer startAnimation];
             }
-        } failureBlock:^(NSError * _Nullable error) {
+        } failureBlock:^(NSError * _Nonnull error) {
             [self.aPlayer removeFromSuperview];
         }];
+        
+//        [parser parseWithURL:[NSURL URLWithString:wyGift.gif_url] completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
+//            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//            if (videoItem != nil) {
+//                self.aPlayer.videoItem = videoItem;
+//                [self.aPlayer startAnimation];
+//            }
+//        } failureBlock:^(NSError * _Nullable error) {
+//            [self.aPlayer removeFromSuperview];
+//        }];
     });
 }
 

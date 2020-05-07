@@ -144,7 +144,7 @@
 }
 
 - (NIMInputWyGift *)wyGiftByCatalogID:(NSString *)catalogID
-                           wyGiftID:(NSString *)wyGiftID
+                             wyGiftID:(NSString *)wyGiftID
 {
     NIMInputWyGift *wyGift = nil;
     if ([wyGiftID length] && [catalogID length])
@@ -164,11 +164,9 @@
 - (void)parsePlist
 {
     NSMutableArray *catalogs = [NSMutableArray array];
-    NSArray *array = [TMCache.sharedCache objectForKey:Key_WyNim_InputGiftData];
-    JSONModelError *error = nil;
-    NSArray *list = [WyGiftModel arrayOfModelsFromDictionaries:array error:&error];
-    if (error || list == nil || list.count < 1) {
-        NSLog(@"聊天礼物菜单元素获取失败:%@",error.description);
+    
+    if (self.wyGifts == nil || self.wyGifts.count < 1) {
+        NSLog(@"聊天礼物菜单元素获取失败");
         return;
     }
     NSDictionary *info = @{
@@ -178,13 +176,13 @@
         @"title":@"wyGift"
     };
     NIMInputWyGiftCatalog *catalog = [self catalogByInfo:info
-                                                     wyGifts:list];
+                                                 wyGifts:self.wyGifts];
     [catalogs addObject:catalog];
     _catalogs = catalogs;
 }
 
 - (NIMInputWyGiftCatalog *)catalogByInfo:(NSDictionary *)info
-                             wyGifts:(NSArray *)wyGiftsArray
+                                 wyGifts:(NSArray *)wyGiftsArray
 {
     NIMInputWyGiftCatalog *catalog = [[NIMInputWyGiftCatalog alloc]init];
     catalog.catalogID = info[@"id"];
@@ -200,11 +198,11 @@
         wyGift.wyGiftID     = [NSString stringWithFormat:@"%ld",(long)model.id];
         wyGift.tag          = model.name;
         wyGift.imgUrl       = model.img_url;
+        wyGift.imgData      = model.img_data;
         wyGift.gifUrl       = model.gif_url;
+        wyGift.gifData      = model.gif_data;
         wyGift.money        = model.money;
         wyGift.wyGiftName   = model.name;
-//        wyGift.unicode        = wyGiftDict[@"unicode"];
-//        wyGift.filename       = wyGiftDict[@"file"];
         
         if (wyGift.wyGiftID) {
             [wyGifts addObject:wyGift];
@@ -226,14 +224,23 @@
         for (NIMInputWyGiftCatalog *catalog in self->_catalogs) {
             [catalog.wyGifts enumerateObjectsUsingBlock:^(NIMInputWyGift  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (obj.imgUrl) {
-//                   __unused UIImage *image = [UIImage nim_emoticonInKit:obj.filename];
-                    __unused NSURL *imgUrl = [NSURL URLWithString:obj.imgUrl];
-                    __unused NSData *imgData = [NSData dataWithContentsOfURL:imgUrl];
-                    __unused UIImage *image =  [UIImage.alloc initWithData:imgData];
+                    //                   __unused UIImage *image = [UIImage nim_emoticonInKit:obj.filename];
+//                    __unused NSURL *imgUrl = [NSURL URLWithString:obj.imgUrl];
+//                    __unused NSData *imgData = [NSData dataWithContentsOfURL:imgUrl];
+//                    __unused UIImage *image =  [UIImage.alloc initWithData:imgData];
                 }
             }];
         }
     });
+}
+
+- (NSArray *)wyGifts{
+    if (_wyGifts != nil && _wyGifts.count>0) {
+        return _wyGifts;
+    }
+    NSArray *array = [TMCache.sharedCache objectForKey:Key_WyNim_InputGiftData];
+    _wyGifts = array;
+    return array;
 }
 
 @end

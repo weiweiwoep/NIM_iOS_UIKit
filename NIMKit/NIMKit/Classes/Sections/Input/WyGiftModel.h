@@ -24,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,assign) BOOL gif_status;
 
+@property (nonatomic,strong) NSData<Optional> *img_data;
+
+@property (nonatomic,strong) NSData<Optional> *gif_data;
+
 @end
 
 NS_ASSUME_NONNULL_END

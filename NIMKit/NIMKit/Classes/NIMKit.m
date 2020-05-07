@@ -14,6 +14,7 @@
 #import "NIMKitInfoFetchOption.h"
 #import "NSBundle+NIMKit.h"
 #import <NIMKit/NIMWyGiftAttachmentDecoder.h>
+#import <NIMKit/NIMInputWyGiftManager.h>
 
 extern NSString *const NIMKitUserInfoHasUpdatedNotification;
 extern NSString *const NIMKitTeamInfoHasUpdatedNotification;
@@ -176,6 +177,7 @@ extern NSString *const NIMKitTeamInfoHasUpdatedNotification;
 - (void)preloadNIMKitBundleResource {
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NIMInputEmoticonManager sharedManager] start];
+        [NIMInputWyGiftManager.sharedManager start];
         //微缘礼物消息解析器
         [NIMCustomObject registerCustomDecoder:[NIMWyGiftAttachmentDecoder new]];
     });
