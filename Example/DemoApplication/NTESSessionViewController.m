@@ -59,4 +59,23 @@
     [[NIMSDK sharedSDK].chatManager sendMessage:message toSession:self.session error:nil];
 }
 
+- (void)onTapMediaItemVideoChat{
+    //语音通话
+    NSLog(@"唤起语音通话!");
+}
+
+//获取用户余额,需二次业务开发
+- (NSString *)getGoldCoin{
+    return @"8888";
+}
+
+//充值,需二次业务开发
+-(void)onTouchRecharge{
+    NSLog(@"充值,需二次业务开发:%s",__func__);
+}
+
+- (BOOL)allowSendMessage{
+    return YES;
+}
+
 @end
