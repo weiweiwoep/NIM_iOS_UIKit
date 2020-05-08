@@ -465,11 +465,18 @@
     NSRange startRange = [text rangeOfString:@"/{wy"];
     NSRange endRange = [text rangeOfString:@"wy}/"];
     if (startRange.location != NSNotFound && endRange.location != NSNotFound) {
-        NSArray *wyGifts = NIMInputWyGiftManager.sharedManager.wyGifts;
-        WyGiftModel *gift = [self findWyGiftWithGifts:wyGifts msgText:text];
+        WyGiftModel *gift = [NIMInputWyGiftManager.sharedManager findWyGiftWithMsgText:text];
+        WyGiftModel *copyGift = [WyGiftModel new];
+        copyGift.id = gift.id;
+        copyGift.name = gift.name;
+        copyGift.money = gift.money;
+        copyGift.img_url = gift.img_url;
+        copyGift.gif_url = gift.gif_url;
+        copyGift.gif_status = gift.gif_status;
+        
         //构造自定义微缘礼物消息
         NIMWyGiftAttachment *attachment = [[NIMWyGiftAttachment alloc] init];
-        attachment.wyGift = gift;
+        attachment.wyGift = copyGift;
         
         //构造自定义MessageObject
         NIMCustomObject *object = [[NIMCustomObject alloc] init];
@@ -494,10 +501,14 @@
         apnsOption.apnsContent = [NSString stringWithFormat:@"%@在群里@了你".nim_localized, me];
         message.apnsMemberOption = apnsOption;
     }
-    
-    [self sendMessage:message];
+    if([self respondsToSelector:@selector(allowSendMessage)]){
+        if([self allowSendMessage]){
+            [self sendMessage:message];
+        }
+    }else{
+        [self sendMessage:message];
+    }
 }
-
 
 - (void)onSelectChartlet:(NSString *)chartletId
                  catalog:(NSString *)catalogId{}
@@ -733,6 +744,10 @@
 - (void)onTapMediaItemLocation:(NIMMediaItem *)item
 {
     [self.interactor mediaLocationPressed];
+}
+
+- (void)onTapMediaItemWyGift:(NIMMediaItem *)item{
+    [self.sessionInputView.toolBar.wyGiftBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
 
 #pragma mark - 旋转处理 (iOS8 or above)

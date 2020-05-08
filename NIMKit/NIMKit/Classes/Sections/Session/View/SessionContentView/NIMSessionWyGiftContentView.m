@@ -18,6 +18,7 @@
 #import "NIMGlobalMacro.h"
 #import "UIImage+NIMKit.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "NIMInputWyGiftManager.h"
 
 @interface NIMSessionWyGiftContentView()<SVGAPlayerDelegate>
 
@@ -60,7 +61,8 @@ static SVGAParser *parser;
     
     if (![customObj.attachment isKindOfClass:NIMWyGiftAttachment.class]) return;
     NIMWyGiftAttachment *wyGiftAttachment = (NIMWyGiftAttachment *)customObj.attachment;
-    WyGiftModel *wyGift = wyGiftAttachment.wyGift;
+    WyGiftModel *gift = [NIMInputWyGiftManager.sharedManager findWyGiftWithGiftId:wyGiftAttachment.wyGift.id];
+    WyGiftModel *wyGift = gift ?: wyGiftAttachment.wyGift;
     
     YYImage *image = [YYImage imageWithData:wyGift.img_data scale:[UIScreen mainScreen].scale];
     _imageView.image = image;
@@ -72,8 +74,7 @@ static SVGAParser *parser;
     
     //播放礼物
     long currentTimeStamp = [[NSDate date] timeIntervalSince1970];
-    if (customObj.message.isReceivedMsg && wyGift.gif_url != nil && wyGift.gif_url.length > 0 && (currentTimeStamp-customObj.message.timestamp)<60*1) {
-        
+    if (wyGift.gif_url != nil && wyGift.gif_url.length > 0 && (currentTimeStamp-customObj.message.timestamp)<60*5) {
         NSString *pathExtension = [wyGift.gif_url pathExtension];
         if ([pathExtension isEqualToString:@"gif"]) {
             [self playGifWithGift:wyGift];

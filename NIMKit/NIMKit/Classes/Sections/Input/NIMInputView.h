@@ -16,16 +16,12 @@
 @class NIMInputEmoticonContainerView;
 @class NIMInputWyGiftContainerView;
 
-
-
 typedef NS_ENUM(NSInteger, NIMAudioRecordPhase) {
     AudioRecordPhaseStart,
     AudioRecordPhaseRecording,
     AudioRecordPhaseCancelling,
     AudioRecordPhaseEnd
 };
-
-
 
 @protocol NIMInputDelegate <NSObject>
 

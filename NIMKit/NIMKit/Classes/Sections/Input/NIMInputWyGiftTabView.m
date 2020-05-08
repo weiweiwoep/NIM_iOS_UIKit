@@ -19,6 +19,8 @@ const CGFloat NIMInputWyGiftLineBoarder = .5f;
 
 @interface NIMInputWyGiftTabView()
 
+@property (nonatomic,strong) UIButton * rechargeButton;         //充值按钮
+
 @property (nonatomic,strong) NSMutableArray * tabs;
 
 @property (nonatomic,strong) NSMutableArray * seps;
@@ -36,17 +38,13 @@ const CGFloat NIMInputWyGiftLineBoarder = .5f;
         _seps = [[NSMutableArray alloc] init];
         
         _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_sendButton setTitle:@"发送".nim_localized forState:UIControlStateNormal];
+        [_sendButton setTitle:@"送给TA" forState:UIControlStateNormal];
         _sendButton.titleLabel.font = [UIFont systemFontOfSize:13.f];
         [_sendButton setBackgroundColor:NIMKit_UIColorFromRGB(0x0079FF)];
         
         _sendButton.nim_height = NIMInputWyGiftTabViewHeight;
         _sendButton.nim_width = NIMInputWyGiftSendButtonWidth;
         [self addSubview:_sendButton];
-        
-        self.layer.borderColor = sepColor.CGColor;
-        self.layer.borderWidth = NIMInputWyGiftLineBoarder;
-        
     }
     return self;
 }
@@ -59,23 +57,45 @@ const CGFloat NIMInputWyGiftLineBoarder = .5f;
     }
     [_tabs removeAllObjects];
     [_seps removeAllObjects];
-    for (NIMInputWyGiftCatalog * catelog in emoticonCatalogs) {
-        UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-        NSURL *imgUrl = [NSURL URLWithString:catelog.icon];
-        NSData *imgData = [NSData dataWithContentsOfURL:imgUrl];
-        UIImage *image =  [UIImage.alloc initWithData:imgData];
-        [button setImage:image forState:UIControlStateNormal];
-        [button setImage:image forState:UIControlStateHighlighted];
-        [button setImage:image forState:UIControlStateSelected];
-        [button addTarget:self action:@selector(onTouchTab:) forControlEvents:UIControlEventTouchUpInside];
-        [button sizeToFit];
-        [self addSubview:button];
-        [_tabs addObject:button];
+    
+    UIImageView *goldCoinImageView = [UIImageView.alloc initWithImage:[UIImage imageNamed:@"wy_gift_icon_goldcoin"]];
+    goldCoinImageView.frame = CGRectMake(8, 8, 12, 12);
+    [goldCoinImageView sizeToFit];
+    [self addSubview:goldCoinImageView];
+    
+    UILabel *goldCoinLabel = [UILabel.alloc initWithFrame:CGRectMake(34, 8, 50, 50)];
+    if([self.delegate respondsToSelector:@selector(getGoldCoin)]){
+        goldCoinLabel.text = [self.delegate getGoldCoin];
+    }else{
+        goldCoinLabel.text = @"0";
+    }
+    goldCoinLabel.textColor = UIColor.whiteColor;
+    goldCoinLabel.font = [UIFont systemFontOfSize:14];
+    [goldCoinLabel sizeToFit];
+    [self addSubview:goldCoinLabel];
+    
+    if (_rechargeButton == nil) {
         
-        UIView *sep = [[UIView alloc] initWithFrame:CGRectMake(0, 0, NIMInputWyGiftLineBoarder, NIMInputWyGiftTabViewHeight)];
-        sep.backgroundColor = sepColor;
-        [_seps addObject:sep];
-        [self addSubview:sep];
+        CGSize goldCoinLabelSize = [goldCoinLabel.text sizeWithAttributes:@{NSFontAttributeName:goldCoinLabel.font}];
+        CGFloat leftPoint = goldCoinLabelSize.width < 50 ? 50 : goldCoinLabelSize.width;
+        _rechargeButton = [UIButton.alloc initWithFrame:CGRectMake(34+leftPoint+8, 0, 60, 30)];
+        [_rechargeButton setTitle:@"充值" forState:UIControlStateNormal];
+        _rechargeButton.titleLabel.textColor = UIColor.whiteColor;
+        _rechargeButton.titleLabel.font = [UIFont systemFontOfSize:13.f];
+        [_rechargeButton setBackgroundColor:NIMKit_UIColorFromRGB(0x0079FF)];
+        [_rechargeButton addTarget:self action:@selector(onTouchRecharge:) forControlEvents:UIControlEventTouchUpInside];
+        
+        _rechargeButton.nim_height = NIMInputWyGiftTabViewHeight;
+        _rechargeButton.nim_width = NIMInputWyGiftSendButtonWidth;
+        [self addSubview:_rechargeButton];
+    }
+    self.layer.borderColor = sepColor.CGColor;
+    self.layer.borderWidth = NIMInputWyGiftLineBoarder;
+}
+
+- (void)onTouchRecharge:(id)sender{
+    if([self.delegate respondsToSelector:@selector(onTouchRecharge)]){
+        [self.delegate onTouchRecharge];
     }
 }
 

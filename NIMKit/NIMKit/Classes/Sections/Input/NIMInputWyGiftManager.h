@@ -54,6 +54,8 @@
 @property (nonatomic,assign)    NSInteger       pagesCount;        //分页数
 @end
 
+@class WyGiftModel;
+
 @interface NIMInputWyGiftManager : NSObject
 
 + (instancetype)sharedManager;
@@ -70,5 +72,9 @@
 
 - (NIMInputWyGiftCatalog *)catalogByInfo:(NSDictionary *)info
                                  wyGifts:(NSArray *)wyGiftsArray;
+
+- (WyGiftModel *)findWyGiftWithMsgText:(NSString *)msgText;
+
+- (WyGiftModel *)findWyGiftWithGiftId:(NSInteger)giftId;
 
 @end

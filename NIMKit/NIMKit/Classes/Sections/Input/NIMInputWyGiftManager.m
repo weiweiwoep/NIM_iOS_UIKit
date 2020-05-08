@@ -243,4 +243,34 @@
     return array;
 }
 
+- (WyGiftModel *)findWyGiftWithMsgText:(NSString *)msgText{
+    WyGiftModel *gift = nil;
+    msgText = [msgText stringByReplacingOccurrencesOfString:@"/{wy" withString:@""];
+    msgText = [msgText stringByReplacingOccurrencesOfString:@"wy}/" withString:@""];
+    NSArray *tmpArray = [msgText componentsSeparatedByString:@"^"];
+    if (tmpArray && tmpArray.count > 0) {
+        NSString *giftIdStr = (NSString *)tmpArray[0];
+        if (giftIdStr && giftIdStr.length > 0) {
+            for (WyGiftModel *obj in self.wyGifts) {
+                if ([[NSString stringWithFormat:@"%ld",obj.id] isEqualToString:giftIdStr]) {
+                    gift = obj;
+                    break;
+                }
+            }
+        }
+    }
+    return gift;
+}
+
+- (WyGiftModel *)findWyGiftWithGiftId:(NSInteger)giftId{
+    WyGiftModel *gift = nil;
+    for (WyGiftModel *obj in self.wyGifts) {
+        if (obj.id == giftId) {
+            gift = obj;
+            break;
+        }
+    }
+    return gift;
+}
+
 @end

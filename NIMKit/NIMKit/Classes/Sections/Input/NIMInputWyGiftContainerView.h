@@ -16,6 +16,10 @@
 
 - (void)didPressSend:(id)sender;
 
+-(void)onTapRecharge;       //充值
+
+- (NSString *)getGoldCoin;      //金币余额
+
 - (void)selectedWyGift:(NSString*)wyGiftID catalog:(NSString*)wyGiftCatalogID description:(NSString *)description;
 
 @end

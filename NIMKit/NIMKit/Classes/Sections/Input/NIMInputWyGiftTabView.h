@@ -13,6 +13,10 @@
 
 - (void)tabView:(NIMInputWyGiftTabView *)tabView didSelectTabIndex:(NSInteger) index;
 
+- (void)onTouchRecharge;        //充值
+
+- (NSString *)getGoldCoin;      //金币余额
+
 @end
 
 @interface NIMInputWyGiftTabView : UIControl

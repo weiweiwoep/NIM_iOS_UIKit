@@ -38,19 +38,24 @@
 - (NSArray *)defaultMediaItems
 {
     return @[[NIMMediaItem item:@"onTapMediaItemPicture:"
-                    normalImage:[UIImage nim_imageInKit:@"bk_media_picture_normal"]
-                  selectedImage:[UIImage nim_imageInKit:@"bk_media_picture_pressed"]
-                          title:@"相册".nim_localized],
+                    normalImage:[UIImage imageNamed:@"bk_media_wy_picture_normal"]
+                  selectedImage:[UIImage imageNamed:@"bk_media_wy_picture_normal"]
+                          title:@"图片"],
              
-             [NIMMediaItem item:@"onTapMediaItemShoot:"
-                    normalImage:[UIImage nim_imageInKit:@"bk_media_shoot_normal"]
-                  selectedImage:[UIImage nim_imageInKit:@"bk_media_shoot_pressed"]
-                          title:@"拍摄".nim_localized],
+             [NIMMediaItem item:@"onTapMediaItemVideoChat"
+                    normalImage:[UIImage imageNamed:@"bk_media_chat_normal"]
+                  selectedImage:[UIImage imageNamed:@"bk_media_chat_normal"]
+                          title:@"视频通话"],
+             
+             [NIMMediaItem item:@"onTapMediaItemWyGift:"
+                    normalImage:[UIImage imageNamed:@"bk_wy_gift_normal"]
+                  selectedImage:[UIImage imageNamed:@"bk_wy_gift_normal"]
+                          title:@"礼物"],
              
              [NIMMediaItem item:@"onTapMediaItemLocation:"
-                    normalImage:[UIImage nim_imageInKit:@"bk_media_position_normal"]
-                  selectedImage:[UIImage nim_imageInKit:@"bk_media_position_pressed"]
-                          title:@"位置".nim_localized],
+                    normalImage:[UIImage imageNamed:@"bk_media_wy_position_normal"]
+                  selectedImage:[UIImage imageNamed:@"bk_media_wy_position_normal"]
+                          title:@"定位"],
              ];
 }
 

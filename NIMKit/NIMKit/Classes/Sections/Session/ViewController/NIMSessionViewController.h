@@ -195,4 +195,9 @@
  */
 - (void)uiUpdateMessage:(NIMMessage *)message;
 
+/**
+ 是否允许发送消息
+ */
+- (BOOL)allowSendMessage;
+
 @end

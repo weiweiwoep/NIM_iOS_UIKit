@@ -299,6 +299,19 @@ NSInteger NIMWyCustomPageViewHeight    = 159;
     }
 }
 
+- (void)onTouchRecharge{
+    if ([self.delegate respondsToSelector:@selector(onTapRecharge)]) {
+        [self.delegate onTapRecharge];
+    }
+}
+
+- (NSString *)getGoldCoin{
+    if ([self.delegate respondsToSelector:@selector(getGoldCoin)]) {
+        return [self.delegate getGoldCoin];
+    }else{
+        return @"0";
+    }
+}
 
 #pragma mark - InputEmoticonTabDelegate
 - (void)tabView:(NIMInputWyGiftTabView *)tabView didSelectTabIndex:(NSInteger) index{
@@ -325,7 +338,6 @@ NSInteger NIMWyCustomPageViewHeight    = 159;
     }
     return array;
 }
-
 
 #pragma mark - Get
 - (NIMInputWyGiftTabView *)tabView

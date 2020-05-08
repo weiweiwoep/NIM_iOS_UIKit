@@ -687,7 +687,19 @@
     }
 }
 
+-(void)onTapRecharge{
+    if([self.actionDelegate respondsToSelector:@selector(onTouchRecharge)]){
+        [self.actionDelegate onTouchRecharge];
+    }
+}
 
+//金币余额
+- (NSString *)getGoldCoin{
+    if([self.actionDelegate respondsToSelector:@selector(getGoldCoin)]){
+        return [self.actionDelegate getGoldCoin];
+    }
+    return @"0";
+}
 
 - (BOOL)onTextDelete
 {
