@@ -74,6 +74,7 @@
     NSLog(@"充值,需二次业务开发:%s",__func__);
 }
 
+//是否允许发送消息
 - (BOOL)allowSendMessage{
     return YES;
 }
