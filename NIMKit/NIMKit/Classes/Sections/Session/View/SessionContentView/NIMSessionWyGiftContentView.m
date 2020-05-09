@@ -74,7 +74,7 @@ static SVGAParser *parser;
     
     //播放礼物
     long currentTimeStamp = [[NSDate date] timeIntervalSince1970];
-    if (wyGift.gif_url != nil && wyGift.gif_url.length > 0 && (currentTimeStamp-customObj.message.timestamp)<60*5) {
+    if (wyGift.gif_url != nil && wyGift.gif_url.length > 0 && (currentTimeStamp-customObj.message.timestamp)<60*2) {
         NSString *pathExtension = [wyGift.gif_url pathExtension];
         if ([pathExtension isEqualToString:@"gif"]) {
             [self playGifWithGift:wyGift];
